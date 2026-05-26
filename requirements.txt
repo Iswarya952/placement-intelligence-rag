@@ -1,0 +1,10 @@
+langchain
+faiss-cpu
+pdfplumber
+pandas
+sentence-transformers
+streamlit
+rank-bm25
+rapidfuzz
+camelot-py
+groq
