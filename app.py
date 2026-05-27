@@ -4,6 +4,7 @@ from ingestion.deduplicator import remove_duplicates
 from ingestion.table_extractor import extract_tables
 from retrieval.vectorstore import build_vectorstore
 from retrieval.hybrid import retrieve
+from retrieval.reranker import rerank
 pdf_path = "data/Placement_RAG_Dataset_Enhanced.pdf"
 
 text = load_pdf(pdf_path)
@@ -48,7 +49,7 @@ print(
     "\n===== RETRIEVAL TEST ====="
 )
 
-query = "What is the package offered by Google?"
+query = "Google package"
 
 results = retrieve(
     query,
@@ -56,10 +57,17 @@ results = retrieve(
     clean_chunks
 )
 
-for r in results:
+ranked = rerank(
+    query,
+    results
+)
+
+for r in ranked:
 
     print(
         "\nRESULT:\n"
     )
 
-    print(r[:500])
+    print(
+        r[:500]
+    )
