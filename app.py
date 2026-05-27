@@ -5,6 +5,7 @@ from ingestion.table_extractor import extract_tables
 from retrieval.vectorstore import build_vectorstore
 from retrieval.hybrid import retrieve
 from retrieval.reranker import rerank
+from retrieval.conflict_detector import detect_conflict
 pdf_path = "data/Placement_RAG_Dataset_Enhanced.pdf"
 
 text = load_pdf(pdf_path)
@@ -70,4 +71,35 @@ for r in ranked:
 
     print(
         r[:500]
+    )
+print(
+    "\n===== CONFLICT TEST ====="
+)
+
+query="Amazon CGPA"
+
+conflict=detect_conflict(
+    query
+)
+
+if conflict:
+
+    print(
+        "Conflict Found"
+    )
+
+    print(
+        "Official:",
+        conflict["official"]
+    )
+
+    print(
+        "Portal:",
+        conflict["portal"]
+    )
+
+else:
+
+    print(
+        "No conflict"
     )
