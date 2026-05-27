@@ -10,7 +10,8 @@ from retrieval.reranker import rerank
 from retrieval.conflict_detector import detect_conflict
 
 from tools.fallback import fallback_response
-from tools.temporal import temporal_query
+from tools.temporal import get_trend
+from tools.reasoner import generate_answer
 
 
 st.set_page_config(
@@ -20,121 +21,91 @@ st.set_page_config(
 
 
 st.title(
-    "🎯 Placement Intelligence RAG"
+    "🎯 Placement Intelligence RAG Assistant"
 )
 
-st.write(
-    "Ask placement related queries"
-)
-
-
-pdf_path = (
-    "data/Placement_RAG_Dataset_Enhanced.pdf"
+st.subheader(
+    "Placement Intelligence Chatbot"
 )
 
 
-@st.cache_resource
-def load_pipeline():
+pdf_path="data/Placement_RAG_Dataset_Enhanced.pdf"
 
-    text = load_pdf(
-        pdf_path
-    )
+text=load_pdf(
+    pdf_path
+)
 
-    chunks = chunk_text(
-        text
-    )
+chunks=chunk_text(
+    text
+)
 
-    clean_chunks = remove_duplicates(
-        chunks
-    )
+clean_chunks=remove_duplicates(
+    chunks
+)
 
-    index, embeddings = build_vectorstore(
-        clean_chunks
-    )
-
-    return (
-        clean_chunks,
-        index
-    )
+index,embeddings=build_vectorstore(
+    clean_chunks
+)
 
 
-clean_chunks, index = load_pipeline()
-
-
-query = st.text_input(
+query=st.text_input(
     "Ask placement query"
 )
 
 
 if query:
 
-    st.subheader(
-        "Query"
-    )
 
-    st.write(
+    answer=generate_answer(
         query
     )
 
 
-    conflict = detect_conflict(
-        query
-    )
+    if answer:
 
-    if conflict:
-
-        st.warning(
-            f"""
-Conflict Found
-
-Official:
-{conflict['official']}
-
-Portal:
-{conflict['portal']}
-"""
+        st.success(
+            answer
         )
 
 
-    trend = temporal_query(
+    trend=get_trend(
         query
     )
 
     if trend:
 
-        st.subheader(
-            "Trend Analysis"
+        st.info(
+f"""
+📈 Trend Analysis
+
+2021 : {trend['2021']} LPA
+
+2022 : {trend['2022']} LPA
+
+2023 : {trend['2023']} LPA
+
+2024 : {trend['2024']} LPA
+"""
         )
 
-        for year, value in trend.items():
 
-            st.write(
-                f"{year} : {value} LPA"
-            )
-
-        st.stop()
-
-
-
-    results = retrieve(
+    results=retrieve(
         query,
         index,
         clean_chunks
     )
 
 
-    ranked = rerank(
+    ranked=rerank(
         query,
         results
     )
 
 
-
-    fallback = fallback_response(
+    fallback=fallback_response(
         query,
         ranked
     )
-
 
 
     if fallback:
@@ -143,27 +114,68 @@ Portal:
             fallback
         )
 
-        st.stop()
+    elif not answer:
 
+        st.warning(
+"""
+No exact answer found.
 
+Try placement queries:
 
-    st.subheader(
-        "Retrieved Results"
-    )
+• Google package
 
+• Amazon CGPA
 
+• Google trend
 
-    for i, r in enumerate(
-            ranked,
-            start=1
-    ):
+• Google interview rounds
 
-        st.write(
-            f"Result {i}"
+• Companies with CGPA above 8.0
+
+• Which company allows 1 backlog
+"""
         )
 
-        st.write(
-            r[:700]
-        )
 
-        st.divider()
+    if ranked:
+
+        with st.expander(
+            "Retrieved context available"
+        ):
+
+            for r in ranked:
+
+                st.write(
+                    r[:500]
+                )
+
+
+st.sidebar.title(
+    "Project Info"
+)
+
+st.sidebar.write(
+"""
+Modules
+
+✔ PDF Loader
+
+✔ Chunking
+
+✔ Deduplication
+
+✔ Table Extraction
+
+✔ Chart Extraction
+
+✔ FAISS Retrieval
+
+✔ Reranking
+
+✔ Conflict Detection
+
+✔ Fallback
+
+✔ Temporal Reasoning
+"""
+)

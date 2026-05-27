@@ -1,37 +1,48 @@
-def temporal_query(
-        query
-):
+def get_trend(query):
 
-    query=query.lower()
+    q=query.lower()
 
-    trends={
 
-        "google":
+    if "google" in q:
 
-        {
+        return {
+
             "2021":38.0,
+
             "2022":40.0,
+
             "2023":41.0,
+
             "2024":42.0
-        },
+        }
 
-        "infosys":
 
-        {
+    if "infosys" in q:
+
+        return {
+
             "2021":36.0,
+
             "2022":39.0,
+
             "2023":41.5,
+
             "2024":42.9
         }
 
-    }
 
-    for company in trends:
+    if "amazon" in q:
 
-        if company in query:
+        return {
 
-            return trends[
-                company
-            ]
+            "2021":22.0,
+
+            "2022":25.0,
+
+            "2023":27.0,
+
+            "2024":28.6
+        }
+
 
     return None
