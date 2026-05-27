@@ -7,39 +7,75 @@ from ingestion.deduplicator import remove_duplicates
 from retrieval.vectorstore import build_vectorstore
 from retrieval.hybrid import retrieve
 from retrieval.reranker import rerank
-
 from retrieval.conflict_detector import detect_conflict
+
 from tools.fallback import fallback_response
+from tools.temporal import temporal_query
+
+
+st.set_page_config(
+    page_title="Placement Intelligence RAG",
+    layout="wide"
+)
+
 
 st.title(
-    "Placement Intelligence RAG"
+    "🎯 Placement Intelligence RAG"
 )
+
+st.write(
+    "Ask placement related queries"
+)
+
 
 pdf_path = (
     "data/Placement_RAG_Dataset_Enhanced.pdf"
 )
 
-text = load_pdf(
-    pdf_path
-)
 
-chunks = chunk_text(
-    text
-)
+@st.cache_resource
+def load_pipeline():
 
-clean_chunks = remove_duplicates(
-    chunks
-)
+    text = load_pdf(
+        pdf_path
+    )
 
-index,_ = build_vectorstore(
-    clean_chunks
-)
+    chunks = chunk_text(
+        text
+    )
+
+    clean_chunks = remove_duplicates(
+        chunks
+    )
+
+    index, embeddings = build_vectorstore(
+        clean_chunks
+    )
+
+    return (
+        clean_chunks,
+        index
+    )
+
+
+clean_chunks, index = load_pipeline()
+
 
 query = st.text_input(
     "Ask placement query"
 )
 
+
 if query:
+
+    st.subheader(
+        "Query"
+    )
+
+    st.write(
+        query
+    )
+
 
     conflict = detect_conflict(
         query
@@ -49,6 +85,8 @@ if query:
 
         st.warning(
             f"""
+Conflict Found
+
 Official:
 {conflict['official']}
 
@@ -57,21 +95,47 @@ Portal:
 """
         )
 
+
+    trend = temporal_query(
+        query
+    )
+
+    if trend:
+
+        st.subheader(
+            "Trend Analysis"
+        )
+
+        for year, value in trend.items():
+
+            st.write(
+                f"{year} : {value} LPA"
+            )
+
+        st.stop()
+
+
+
     results = retrieve(
         query,
         index,
         clean_chunks
     )
 
+
     ranked = rerank(
         query,
         results
     )
 
+
+
     fallback = fallback_response(
         query,
         ranked
     )
+
+
 
     if fallback:
 
@@ -79,10 +143,27 @@ Portal:
             fallback
         )
 
-    else:
+        st.stop()
 
-        for r in ranked:
 
-            st.write(
-                r[:500]
-            )
+
+    st.subheader(
+        "Retrieved Results"
+    )
+
+
+
+    for i, r in enumerate(
+            ranked,
+            start=1
+    ):
+
+        st.write(
+            f"Result {i}"
+        )
+
+        st.write(
+            r[:700]
+        )
+
+        st.divider()
