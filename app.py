@@ -6,6 +6,7 @@ from retrieval.vectorstore import build_vectorstore
 from retrieval.hybrid import retrieve
 from retrieval.reranker import rerank
 from retrieval.conflict_detector import detect_conflict
+from tools.fallback import fallback_response
 pdf_path = "data/Placement_RAG_Dataset_Enhanced.pdf"
 
 text = load_pdf(pdf_path)
@@ -102,4 +103,32 @@ else:
 
     print(
         "No conflict"
+    )
+print(
+    "\n===== FALLBACK TEST ====="
+)
+
+query="Who won IPL 2025?"
+
+results=retrieve(
+    query,
+    index,
+    clean_chunks
+)
+
+fallback=fallback_response(
+    query,
+    results
+)
+
+if fallback:
+
+    print(
+        fallback
+    )
+
+else:
+
+    print(
+        "Answer exists"
     )
