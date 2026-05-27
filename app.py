@@ -3,6 +3,7 @@ from ingestion.chunker import chunk_text
 from ingestion.deduplicator import remove_duplicates
 from ingestion.table_extractor import extract_tables
 from retrieval.vectorstore import build_vectorstore
+from retrieval.hybrid import retrieve
 pdf_path = "data/Placement_RAG_Dataset_Enhanced.pdf"
 
 text = load_pdf(pdf_path)
@@ -43,3 +44,22 @@ print(
     "Vectors:",
     index.ntotal
 )
+print(
+    "\n===== RETRIEVAL TEST ====="
+)
+
+query = "What is the package offered by Google?"
+
+results = retrieve(
+    query,
+    index,
+    clean_chunks
+)
+
+for r in results:
+
+    print(
+        "\nRESULT:\n"
+    )
+
+    print(r[:500])
