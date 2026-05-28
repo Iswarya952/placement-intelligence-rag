@@ -1,0 +1,46 @@
+[
+    {
+        "query": "\u2022 Google package",
+        "answer": "Google offers 42.0 LPA package."
+    },
+    {
+        "query": "\u2022 Which company allows 1 backlog",
+        "answer": "\nCompanies allowing 1 backlog:\n\n\u2022 Deloitte\n\u2022 Amazon\n\u2022 Wipro\n\u2022 HCL\n"
+    },
+    {
+        "query": "Google package",
+        "answer": "Google offers 42.0 LPA package."
+    },
+    {
+        "query": "Which company gives highest package?",
+        "answer": "\nHighest package companies:\n\n\u2022 Infosys \u2192 42.9 LPA\n\n\u2022 Cognizant \u2192 42.3 LPA\n\n\u2022 Google \u2192 42.0 LPA\n"
+    },
+    {
+        "query": "Companies with CGPA above 8.0",
+        "answer": "\nCompanies with CGPA above 8.0:\n\n\u2022 Infosys\n\n\u2022 Accenture\n\n\u2022 Cognizant\n\n\u2022 SAP\n\n\u2022 HCL\n\n\u2022 Tech Mahindra\n"
+    },
+    {
+        "query": "Companies with zero backlogs",
+        "answer": "\nCompanies allowing zero backlog:\n\n\u2022 TCS\n\n\u2022 Infosys\n\n\u2022 Google\n\n\u2022 Microsoft\n\n\u2022 Intel\n"
+    },
+    {
+        "query": "TCS interview rounds",
+        "answer": "\nTCS Interview Rounds:\n\n1. Aptitude Test\n\n2. Coding Round\n\n3. Technical Interview\n\n4. HR Interview\n"
+    },
+    {
+        "query": "Best movie in 2025",
+        "answer": "Out-of-corpus query detected."
+    },
+    {
+        "query": "Which company allows 2 backlogs",
+        "answer": "\nCompanies allowing 2 backlogs:\n\n\u2022 IBM\n\n\u2022 Tech Mahindra\n\n\u2022 Qualcomm\n\n\u2022 Samsung R&D\n"
+    },
+    {
+        "query": "TCS interview rounds",
+        "answer": "\nTCS Interview Rounds:\n\n1. Aptitude Test\n\n2. Coding Round\n\n3. Technical Interview\n\n4. HR Interview\n"
+    },
+    {
+        "query": "Google trend",
+        "answer": "\nGoogle Trend:\n\n2021 \u2192 38.0 LPA\n\n2022 \u2192 40.0 LPA\n\n2023 \u2192 41.0 LPA\n\n2024 \u2192 42.0 LPA\n"
+    }
+]

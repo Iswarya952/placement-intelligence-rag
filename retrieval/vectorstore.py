@@ -1,28 +1,30 @@
+
+
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 
-model = SentenceTransformer(
+
+model=SentenceTransformer(
     "all-MiniLM-L6-v2"
 )
 
+
 def build_vectorstore(chunks):
 
-    embeddings = model.encode(
-        chunks
+    embeddings=model.encode(chunks)
+
+    embeddings=np.array(
+        embeddings,
+        dtype="float32"
     )
 
-    dimension = embeddings.shape[1]
+    dimension=embeddings.shape[1]
 
-    index = faiss.IndexFlatL2(
+    index=faiss.IndexFlatL2(
         dimension
     )
 
-    index.add(
-        np.array(
-            embeddings,
-            dtype="float32"
-        )
-    )
+    index.add(embeddings)
 
-    return index, embeddings
+    return index,embeddings

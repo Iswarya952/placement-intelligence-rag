@@ -1,0 +1,18 @@
+[
+    {
+        "query": "TCS interview rounds",
+        "answer": "\nTCS Interview Rounds\n\n1. Aptitude Round\n\n2. Coding Round\n\n3. Technical Interview\n\n4. HR Interview\n"
+    },
+    {
+        "query": "Student with CGPA 7 and 1 backlog best company",
+        "answer": "\nCompanies allowing 1 backlog\n\n\u2022 Deloitte\n\n\u2022 Amazon\n\n\u2022 Wipro\n\n\u2022 HCL\n"
+    },
+    {
+        "query": "Which Python company hires most interns",
+        "answer": "\nPython-focused companies\n\n\u2022 Google \u2192 42.0 LPA\n\n\u2022 Intel \u2192 41.4 LPA\n\n\u2022 Flipkart \u2192 25.3 LPA\n\nHighest package : Google\n"
+    },
+    {
+        "query": "Compare Google and Amazon eligibility package hiring trend",
+        "answer": "Google offers 42.0 LPA package."
+    }
+]

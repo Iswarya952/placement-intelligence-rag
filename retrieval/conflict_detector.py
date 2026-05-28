@@ -1,29 +1,21 @@
-def detect_conflict(
-        query
-):
 
-    query=query.lower()
 
-    conflicts={
+def detect_conflict(query):
 
-        "amazon cgpa":
-        {
+    q=query.lower()
+
+    if "amazon" in q and "cgpa" in q:
+
+        return {
             "official":"6.4",
             "portal":"7.0"
-        },
-
-        "google package":
-        {
-            "official":"42.0",
-            "portal":"40.0"
         }
 
-    }
+    if "google" in q and "package" in q:
 
-    for key in conflicts:
-
-        if key in query:
-
-            return conflicts[key]
+        return {
+            "official":"42.0",
+            "portal":"45.0"
+        }
 
     return None

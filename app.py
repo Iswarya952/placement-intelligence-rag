@@ -1,6 +1,9 @@
+# app.py
+
 from ingestion.loader import load_pdf
 from ingestion.chunker import chunk_text
 from ingestion.deduplicator import remove_duplicates
+
 from ingestion.table_extractor import extract_tables
 from ingestion.chart_processor import extract_chart_pages
 
@@ -10,240 +13,71 @@ from retrieval.reranker import rerank
 from retrieval.conflict_detector import detect_conflict
 
 from tools.fallback import fallback_response
+from tools.temporal import get_trend
+from tools.reasoner import generate_answer
 
 
-pdf_path = (
-    "data/Placement_RAG_Dataset_Enhanced.pdf"
-)
+pdf_path="data/Placement_RAG_Dataset_Enhanced.pdf"
 
+text=load_pdf(pdf_path)
 
-print(
-    "\n===== PDF LOADING ====="
-)
+chunks=chunk_text(text)
 
-text = load_pdf(
-    pdf_path
-)
+clean_chunks=remove_duplicates(chunks)
 
+print("Total chunks:",len(chunks))
+print("After dedup:",len(clean_chunks))
 
-print(
-    "\n===== CHUNKING ====="
-)
+tables=extract_tables(pdf_path)
 
-chunks = chunk_text(
-    text
-)
+print("Tables found:",len(tables))
 
-clean_chunks = remove_duplicates(
-    chunks
-)
+charts=extract_chart_pages(pdf_path)
 
-print(
-    "Total chunks:",
-    len(chunks)
-)
+print("Chart pages:",len(charts))
 
-print(
-    "After dedup:",
-    len(clean_chunks)
-)
-
-
-
-print(
-    "\n===== TABLE EXTRACTION ====="
-)
-
-tables = extract_tables(
-    pdf_path
-)
-
-print(
-    "Tables found:",
-    len(tables)
-)
-
-
-for t in tables[:3]:
-
-    print(
-        "\nPage:",
-        t["page"]
-    )
-
-    print(
-        t["data"].head()
-    )
-
-
-
-print(
-    "\n===== CHART EXTRACTION ====="
-)
-
-charts = extract_chart_pages(
-    pdf_path
-)
-
-print(
-    "Charts found:",
-    len(charts)
-)
-
-for c in charts:
-
-    print(
-        "\nChart Page:",
-        c["page"]
-    )
-
-    print(
-        c["text"][:300]
-    )
-
-
-
-print(
-    "\n===== VECTORSTORE ====="
-)
-
-index, embeddings = build_vectorstore(
+index,embeddings=build_vectorstore(
     clean_chunks
 )
 
-print(
-    "Vectors:",
-    index.ntotal
-)
+print("Vectors:",index.ntotal)
 
+query="Google package"
 
+answer=generate_answer(query)
 
-print(
-    "\n===== RETRIEVAL TEST ====="
-)
+print(answer)
 
-query = (
-    "Google package"
-)
-
-results = retrieve(
+results=retrieve(
     query,
     index,
     clean_chunks
 )
 
-ranked = rerank(
+ranked=rerank(
     query,
     results
 )
-
 
 for r in ranked:
 
-    print(
-        "\nRESULT:\n"
-    )
+    print("\nRESULT:\n")
 
-    print(
-        r[:500]
-    )
+    print(r[:300])
 
+trend=get_trend(query)
 
+print(trend)
 
-print(
-    "\n===== CONFLICT TEST ====="
-)
-
-query = (
+conflict=detect_conflict(
     "Amazon CGPA"
 )
 
-conflict = detect_conflict(
-    query
-)
+print(conflict)
 
-
-if conflict:
-
-    print(
-        "Conflict Found"
-    )
-
-    print(
-        "Official:",
-        conflict[
-            "official"
-        ]
-    )
-
-    print(
-        "Portal:",
-        conflict[
-            "portal"
-        ]
-    )
-
-else:
-
-    print(
-        "No conflict"
-    )
-
-
-
-print(
-    "\n===== FALLBACK TEST ====="
-)
-
-query = (
-    "Who won IPL 2025?"
-)
-
-results = retrieve(
-    query,
-    index,
-    clean_chunks
-)
-
-fallback = fallback_response(
-    query,
+fallback=fallback_response(
+    "Who won IPL 2025?",
     results
 )
 
-
-if fallback:
-
-    print(
-        fallback
-    )
-
-else:
-
-    print(
-        "Answer exists"
-    )
-
-
-
-print(
-    "\n===== PROJECT SUMMARY ====="
-)
-
-print(
-    """
-Completed Modules:
-
-1. PDF Loader
-2. Chunking
-3. Deduplication
-4. Table Extraction
-5. Chart Extraction
-6. FAISS Vector Store
-7. Retrieval
-8. Reranking
-9. Conflict Detection
-10. Fallback Handling
-11. Streamlit UI
-12. Temporal Reasoning
-"""
-)
+print(fallback)

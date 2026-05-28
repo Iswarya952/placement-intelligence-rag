@@ -1,16 +1,16 @@
-import pdfplumber
 
-def load_pdf(path):
+from langchain_community.document_loaders import PyPDFLoader
+
+def load_pdf(pdf_path):
+
+    loader = PyPDFLoader(pdf_path)
+
+    documents = loader.load()
 
     text = ""
 
-    with pdfplumber.open(path) as pdf:
+    for doc in documents:
 
-        for page in pdf.pages:
-
-            page_text = page.extract_text()
-
-            if page_text:
-                text += page_text + "\n"
+        text += doc.page_content
 
     return text

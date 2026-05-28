@@ -1,9 +1,12 @@
+
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-model = SentenceTransformer(
+
+model=SentenceTransformer(
     "all-MiniLM-L6-v2"
 )
+
 
 def retrieve(
         query,
@@ -12,11 +15,11 @@ def retrieve(
         k=3
 ):
 
-    query_embedding = model.encode(
+    query_embedding=model.encode(
         [query]
     )
 
-    distances, ids = index.search(
+    distances,ids=index.search(
         np.array(
             query_embedding,
             dtype="float32"

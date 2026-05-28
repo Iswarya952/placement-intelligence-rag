@@ -1,27 +1,19 @@
-from rapidfuzz import fuzz
+# ingestion/deduplicator.py
 
 def remove_duplicates(chunks):
 
-    unique=[]
+    unique_chunks=[]
+
+    seen=set()
 
     for chunk in chunks:
 
-        duplicate=False
+        cleaned=chunk.strip()
 
-        for existing in unique:
+        if cleaned not in seen:
 
-            score=fuzz.ratio(
-                chunk,
-                existing
-            )
+            seen.add(cleaned)
 
-            if score > 95:
+            unique_chunks.append(cleaned)
 
-                duplicate=True
-                break
-
-        if not duplicate:
-
-            unique.append(chunk)
-
-    return unique
+    return unique_chunks

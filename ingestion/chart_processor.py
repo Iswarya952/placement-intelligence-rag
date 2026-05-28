@@ -1,31 +1,36 @@
-import pdfplumber
 
-def extract_chart_pages(
-        pdf_path
-):
+import fitz
+
+
+def extract_chart_pages(pdf_path):
+
+    doc=fitz.open(pdf_path)
 
     chart_pages=[]
 
-    with pdfplumber.open(
-        pdf_path
-    ) as pdf:
+    keywords=[
+        "trend",
+        "chart",
+        "graph"
+    ]
 
-        for i,page in enumerate(
-            pdf.pages
-        ):
+    for page_num in range(len(doc)):
 
-            text=page.extract_text()
+        page=doc[page_num]
 
-            if text and (
-                "trend" in text.lower()
-                or "chart" in text.lower()
-            ):
+        text=page.get_text().lower()
+
+        for keyword in keywords:
+
+            if keyword in text:
 
                 chart_pages.append(
                     {
-                        "page":i+1,
+                        "page":page_num+1,
                         "text":text[:1000]
                     }
                 )
+
+                break
 
     return chart_pages

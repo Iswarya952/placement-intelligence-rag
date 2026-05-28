@@ -1,35 +1,24 @@
-import pdfplumber
-import pandas as pd
 
-def extract_tables(path):
 
-    all_tables = []
+import camelot
 
-    with pdfplumber.open(path) as pdf:
 
-        for page_no, page in enumerate(pdf.pages):
+def extract_tables(pdf_path):
 
-            tables = page.extract_tables()
+    tables=camelot.read_pdf(
+        pdf_path,
+        pages="all"
+    )
 
-            for table in tables:
+    extracted=[]
 
-                if table and len(table) > 1:
+    for i,table in enumerate(tables):
 
-                    try:
+        extracted.append(
+            {
+                "page":table.page,
+                "data":table.df
+            }
+        )
 
-                        df = pd.DataFrame(
-                            table[1:],
-                            columns=table[0]
-                        )
-
-                        all_tables.append(
-                            {
-                                "page": page_no + 1,
-                                "data": df
-                            }
-                        )
-
-                    except:
-                        pass
-
-    return all_tables
+    return extracted

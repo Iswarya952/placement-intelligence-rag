@@ -1,28 +1,40 @@
-from rapidfuzz import fuzz
+
+
+from sentence_transformers import CrossEncoder
+
+
+reranker=CrossEncoder(
+    "cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+
 
 def rerank(
         query,
         results
 ):
 
-    scored=[]
+    pairs=[]
 
     for r in results:
 
-        score = fuzz.partial_ratio(
-            query.lower(),
-            r.lower()
+        pairs.append(
+            [query,r]
         )
 
-        scored.append(
-            (score, r)
-        )
+    scores=reranker.predict(
+        pairs
+    )
 
-    scored.sort(
+    ranked=sorted(
+        zip(results,scores),
+        key=lambda x:x[1],
         reverse=True
     )
 
-    return [
-        x[1]
-        for x in scored
-    ]
+    final_results=[]
+
+    for r,s in ranked:
+
+        final_results.append(r)
+
+    return final_results
